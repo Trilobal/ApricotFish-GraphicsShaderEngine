@@ -11,9 +11,11 @@
 
 #include "TimerClass.h"
 
+// 主要IMGUI函数区
 class apfimgui
 {
 public:
+	//初始化IMGUI
 	virtual void initalisierenImgui()
 	{
 		ImGui::CreateContext();
@@ -28,6 +30,7 @@ public:
 		ImGui_ImplOpenGL3_Init("#version 330");
 	}
 
+	//IMGUI页开头
 	virtual void imguiBegin()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
@@ -36,25 +39,32 @@ public:
 		ImGui::NewFrame();
 	}
 
+	//IMGUI函数循环 主要用于绘制界面以及组件
 	virtual void imguiLoop()
 	{
+		//这边是变量主要聚集区
 		static ImGuiStyle& style = ImGui::GetStyle();
 
+		//用于判断IMGUI界面大小改动
 		static bool styleNumVar = 1;
 		static bool styleNumVar2 = 1;
 		static bool styleNumVar3 = 1;
 
+		//Imgui::checkbox中的变量聚集区
 		static bool demoWindow = false;
 		static bool WindowLeftTop = false;
 		static bool shaderCodeWindow = false;
 		static bool apricotFishSettingsSw = false;
 		static bool imguistyleSw = false;
 
+		//判断窗口位置，然后让新窗口的位置位于计算位置
 		static float tempWindowHeight = 0;
 		static bool tempWindowPosSw = 1;
 
+		//粗暴的内存美学，太粗暴了，太硬了，粗暴到简直要shi掉了
 		static char shaderSourceCode[99999] = "";
 
+		//GLSL代码构造的基础代码
 		static string shaderSourceCodeZero = "";
 		static string shaderBaseSourceCode =
 			"#version 330 core\n\n"
@@ -63,8 +73,10 @@ public:
 			"\040\040\040\040\n"
 			"}\0";
 
+		//初始化的文件路径
 		static char FilePath[50] = "C:/Apricot Fish Engine/vShader.vs";
 
+		//判断Ctrl+S，这里是用快捷键存储GLSL代码
 		if (glfwGetKey(m_window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS && glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS)
 		{
 			ofstream SourceTxt;
@@ -98,6 +110,7 @@ public:
 
 		ImGui::SameLine();
 
+		//设置的IMGUI界面
 		ImGui::Checkbox("Apricot Fish Settings", &apricotFishSettingsSw);
 		if (apricotFishSettingsSw)
 		{
@@ -120,12 +133,14 @@ public:
 			ImGui::End();
 		}
 
+		// 让窗口一直位于左上角
 		ImGui::Checkbox("Window Left Top", &WindowLeftTop);
 		if (WindowLeftTop)
 			ImGui::SetWindowPos(ImVec2(0, 0), 1);
 
 		ImGui::SameLine();
 
+		// 编辑GLSL代码的窗口
 		ImGui::Checkbox("Shader Code", &shaderCodeWindow);
 		if (shaderCodeWindow)
 		{
@@ -161,6 +176,7 @@ public:
 
 			const char* items[] = { "" };
 
+			//读取Vertex着色器的代码
 			if (ImGui::Button("Read Vertex Code"))
 			{
 				ofstream SourceTxt;
@@ -180,6 +196,7 @@ public:
 				}
 			}
 			ImGui::SameLine();
+			//读取Fragment着色器的代码
 			if (ImGui::Button("Read Fragment Code"))
 			{
 				ofstream SourceTxt;
@@ -200,8 +217,10 @@ public:
 			}
 
 			ImGui::SameLine();
+			//文件存储路径
 			ImGui::InputText("FilePath", FilePath, IM_ARRAYSIZE(FilePath));
 			
+			//保存着色器代码按钮
 			if (ImGui::Button("Save Shader Source Code"))
 			{
 				ofstream SourceTxt;
@@ -224,6 +243,7 @@ public:
 
 			ImGui::SameLine();
 
+			//自动保存代码，还没有写好，你可以编写一个定时器然后套入到这里即可。
 			static bool auto_saveSourceCode = false;
 			if (ImGui::Checkbox("Auto Save Code", &auto_saveSourceCode))
 			{
@@ -239,6 +259,7 @@ public:
 			static int apfColorG = 0;
 			static int apfColorA = 255;
 
+			//InputText的字体颜色改变
 			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(apfColorR, apfColorB, apfColorG, apfColorA));
 			ImGui::InputTextMultiline("##input text", shaderSourceCode, IM_ARRAYSIZE(shaderSourceCode), ImVec2(-FLT_MIN, ImGui::GetWindowHeight() + 100));
 			ImGui::PopStyleColor();
@@ -252,6 +273,7 @@ public:
 		}
 
 		static bool ModelFunctionsSw = false;
+		//模型载入窗口，还没有写完的
 		ImGui::Checkbox("Model Functions", &ModelFunctionsSw);
 		if (ModelFunctionsSw)
 		{
@@ -287,12 +309,14 @@ public:
 		ImGui::End();
 	}
 
+	//IMGUI的渲染
 	virtual void imguiRender()
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
+	//IMGUI的结束
 	virtual void imguiEnd()
 	{
 		ImGui::EndFrame();
@@ -326,6 +350,7 @@ private:
 		temp.GrabRounding = temp.FrameRounding;
 	}
 
+	//用流输入方式从指定位置读取文本
 	string readStreamtxt(const char* vPath)
 	{
 		string StreamCode;

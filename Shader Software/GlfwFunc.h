@@ -1,9 +1,11 @@
+// GLFW窗口初始化，这里是核心的文件，引用了包括IMGUI等很多东西
 #include "apfimgui.h"
 #include "stream.h"
 #include "baseInit.h"
 
 namespace apf	//Apricot Fish
 {
+	// 键回调
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 	{
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -12,9 +14,11 @@ namespace apf	//Apricot Fish
 		}
 	}
 
+	//GLFW
 	class apfeng : public apfimgui
 	{
 	public:
+		//GLFW初始化
 		int initialisieruns()
 		{
 			if (glfwInit())
@@ -49,7 +53,7 @@ namespace apf	//Apricot Fish
 			return 0;
 		}
 
-
+		//构造GLFW窗口
 		int constructionGlfwWindow(string title, int width, int height)
 		{
 			if (!init_erfolgreich)

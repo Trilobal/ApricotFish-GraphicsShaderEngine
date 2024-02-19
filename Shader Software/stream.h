@@ -1,4 +1,5 @@
 #pragma once
+//流读取以及GLFW着色器编译方面
 #include "GlfwInit.h"
 #include "baseInit.h"
 

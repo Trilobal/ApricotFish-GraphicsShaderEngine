@@ -1,4 +1,5 @@
 #pragma once
+//模型载入函数，函数方面注释写的很明白了
 #include "stream.h"
 #include "baseInit.h"
 
