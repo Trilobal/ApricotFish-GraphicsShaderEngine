@@ -3,6 +3,8 @@
 #include "stream.h"
 #include "baseInit.h"
 
+apf::apfLog temp;
+
 namespace apf	//Apricot Fish
 {
 	// ¼ü»Øµ÷
@@ -35,20 +37,36 @@ namespace apf	//Apricot Fish
 				init_total_erfolgreich.push_back("ApfLog Initlaize: TRUE");
 
 				apf::apfLog::GetCoreLogger()->info("GLFW-Initialisierung erfolgreich!");
+				if (temp.swOpenSpdlogInformationFunctions)
+				{
+					apf::apfLog::GetBaseSpdlogInformation()->info("GLFW-Initialisierung erfolgreich!");
+				}
 			}
 			else
 			{
 				init_total_erfolgreich.push_back("GLFW Initlaize: FALSE");
 
 				apf::apfLog::GetCoreLogger()->error("GLFW-Initialisierungsfehler...");
+				if (temp.swOpenSpdlogInformationFunctions)
+				{
+					apf::apfLog::GetBaseSpdlogInformation()->error("GLFW-Initialisierungsfehler...");
+				}
 				return -1;
 			}
 
 			for (auto info : init_total_erfolgreich)
 			{
 				apf::apfLog::GetCoreLogger()->info("Total initialised: {}", info);
+				if (temp.swOpenSpdlogInformationFunctions)
+				{
+					apf::apfLog::GetBaseSpdlogInformation()->info("Total initialised: {}", info);
+				}
 			}
 			apf::apfLog::GetCoreLogger()->info("Total initialised: {}", init_total_erfolgreich.size());
+			if (temp.swOpenSpdlogInformationFunctions)
+			{
+				apf::apfLog::GetBaseSpdlogInformation()->info("Total initialised: {}", init_total_erfolgreich.size());
+			}
 
 			return 0;
 		}

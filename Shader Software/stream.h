@@ -2,6 +2,7 @@
 //流读取以及GLFW着色器编译方面
 #include "GlfwInit.h"
 #include "baseInit.h"
+#include "spdlog.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -45,10 +46,19 @@ public:
 		glCompileShader(vertex);
 		checkCompileErrors(vertex, "vertex");
 
-		fragment = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(fragment, 1, &vShaderCode, NULL);
+		fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &fShaderCode, NULL);
 		glCompileShader(fragment);
-		checkCompileErrors(fragment, "vertex");
+		checkCompileErrors(fragment, "fragment");
+
+		ID = glCreateProgram();
+		glAttachShader(ID, vertex);
+		glAttachShader(ID, fragment);
+		glLinkProgram(ID);
+		checkCompileErrors(ID, "program");
+
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
 	}
 public:
 	void readStreamInfomation()
@@ -133,7 +143,11 @@ private:
 			if (!success)
 			{
 				glGetShaderInfoLog(shader, 1024, NULL, infoLog);
-				cout << "ERROR::Shader_Compilation_Error of type: " << type << "\n" << infoLog << endl;
+				apf::apfLog::GetCoreLogger()->error("Shader_Compilation_Error of type: {}\n{}", type, infoLog);
+			}
+			else
+			{
+				apf::apfLog::GetCoreLogger()->info("Shader_compilation_successfully! : Type[{}]", type);
 			}
 		}
 		else
@@ -142,8 +156,12 @@ private:
 			if (!success)
 			{
 				glGetProgramInfoLog(shader, 1024, NULL, infoLog);
-				cout << "ERROR::Program_Compilation_Error of type: " << type << "\n" << infoLog << endl;
+				apf::apfLog::GetCoreLogger()->error("Program_Compilation_Error of type: {}\n{}", type, infoLog);
 			}
+			{
+				apf::apfLog::GetCoreLogger()->info("Program_Compilation_successfully! : Type[{}]", type);
+			}
+
 		}
 	}
 private:

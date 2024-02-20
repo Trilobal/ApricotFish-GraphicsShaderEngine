@@ -7,8 +7,6 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
-#include "spdlog.h"
-
 #include "TimerClass.h"
 
 // 主要IMGUI函数区
@@ -129,6 +127,23 @@ public:
 				ImGui::StyleColorsLight();
 			if (item_current == 2)
 				ImGui::StyleColorsClassic();
+
+			static bool autoSaveSpdlogInformation = false;
+			ImGui::Checkbox("Open Auto Save Spdlog Information",&autoSaveSpdlogInformation);
+			static bool autoSaveSpdlogInformationValue = true;
+			static int a = 1;
+			if (autoSaveSpdlogInformation)
+			{
+				if (autoSaveSpdlogInformationValue)
+				{
+					//整个程序结束后写入到日志文件，路径：C:\Apricot Fish Engine\Spdlog_Information
+					//修改一下逻辑就可以，添加个判断checkbox的开关，然后在spdlog.cpp以及spdlog.h文件中找到定义添加一下开关判断.
+					apf::apfLog::GetCoreLogger()->info("Autosave logging is turned on!");
+					
+					autoSaveSpdlogInformationValue = false;
+				}
+			}
+			else autoSaveSpdlogInformationValue = true;
 
 			ImGui::End();
 		}
@@ -376,5 +391,10 @@ private:
 		}
 
 		return StreamCode;
+	}
+
+	bool takeBook(bool bools)
+	{
+		return bools == true ? false : true;
 	}
 };
